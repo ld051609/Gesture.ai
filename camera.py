@@ -11,9 +11,11 @@
 import cv2
 import mediapipe as mp
 import pyautogui
+
 model_path = './gesture_recognizer.task'
-GCP_BUCKET = "hand-gesture-kaggle-ds"
-MODEL_PATH = "resnet-hand-gesture-model/hand_gesture_recognition_model.keras"  # Adjust the path if necessary
+
+# Get screen dimensions
+screen_width, screen_height = pyautogui.size()
 
 # Create the task
 BaseOptions = mp.tasks.BaseOptions
@@ -43,16 +45,14 @@ def print_result(result: GestureRecognizerResult, output_image: mp.Image, timest
                 pyautogui.scroll(1)
             else:
                 print('No mouse control.')
-
-
     else:
         print('No gesture recognized.')
-
 
 options = GestureRecognizerOptions(
     base_options=BaseOptions(model_asset_path=model_path),
     running_mode=VisionRunningMode.LIVE_STREAM,
-    result_callback=print_result)
+    result_callback=print_result
+)
 
 # Initialize the gesture recognizer
 recognizer = GestureRecognizer.create_from_options(options)
@@ -68,6 +68,11 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Define the camera
 camera = cv2.VideoCapture(0)
+
+# Set camera frame size to match screen dimensions
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, screen_width)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, screen_height)
+
 timestamp_ms = 0  # Initialize timestamp
 
 while True:
@@ -81,7 +86,7 @@ while True:
     # Convert the BGR image to RGB
     imgRGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    # Prepare the data by converting the frame from opencv to MediaPipe Image
+    # Prepare the data by converting the frame from OpenCV to MediaPipe Image
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=imgRGB)
 
     # Process the image with MediaPipe Hands
@@ -107,11 +112,8 @@ while True:
                     print(id, lm)
                     x_mouse, y_mouse = int(lm.x * frame.shape[1]), int(lm.y * frame.shape[0])
 
-            # Draw the bounding box around detected hand
+            # Draw the bounding box around the detected hand
             cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-
-            # preprocess the image
-            hand_image = frame[y_min:y_max, x_min:x_max]
 
             # Increment timestamp for each frame
             timestamp_ms += 1
