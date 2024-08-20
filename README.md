@@ -1,6 +1,6 @@
-# Gesture.ai Project
+# Moustrack
 
-By utilizing computer vision, Gesture.ai allows you to control your mouse movement using hand gestures, providing an intuitive and hands-free interaction experience.
+By utilizing computer vision, Moustrack allows you to control your mouse movement using hand gestures, providing an intuitive and hands-free interaction experience.
 ## Features 
 - **Thumb Down Gesture**
   - Action: Scroll down
