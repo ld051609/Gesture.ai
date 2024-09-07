@@ -1,4 +1,4 @@
-# Moustrack
+# Mousetrack
 
 By utilizing computer vision, Moustrack allows you to control your mouse movement using hand gestures, providing an intuitive and hands-free interaction experience.
 ## Features 
